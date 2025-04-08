@@ -105,6 +105,7 @@ class EnrollmentSystem:
 
         student.registered_courses.add(course_id)
         course.enrolled_students.add(student_id)
+        
         print("✅ Enrollment successful.")
         self.save_data()
 
@@ -156,6 +157,29 @@ class EnrollmentSystem:
             else:
                 print("⚠️ Incorrect password or g number")
 
+    def course_search(self):
+        # find all the courses that match the wildcard, and return a list of them
+        keyword = input("🔎enter full or partial keyword (course name, instructor, course id etc): ").lower
+        #keyword = keyword.lower()
+        matches = []
+
+        for course in self.courses.values(): # values are class objects
+            if (keyword in course.name.lower() or 
+                keyword in course.course_id.lower() or 
+                keyword in course.instructor.lower()):
+                matches.append(course)
+
+        if matches:
+            print("\n📃 Search Results:")
+            for course in matches:
+                print(f"{course.course_id} - {course.name} | Instructor: {course.instructor}")
+        else:
+            print("no matches found.")
+
+        return matches
+
+
+
 # ---------- CLI ----------
 def main():
     system = EnrollmentSystem()
@@ -201,6 +225,7 @@ def main():
         elif choice == "3":
             student_id = student.student_id
             course_id = input("Enter course ID to enroll: ").strip()
+
             system.enroll_student(student_id, course_id)
 
         elif choice == "4":
